@@ -6,7 +6,9 @@ export const registrationSchema = z.object({
     .min(2, "First name must be  between 2 and 50 characters")
     .max(50, "First name must be  between 2 and 50 characters"),
 
-  email: z.string({ required_error: "email is required" }).email(),
+  email: z
+    .string({ required_error: "email is required" })
+    .email("Invalid email address"),
   password: z
     .string({ required_error: "password is required" })
     .min(8, "password must be 8 characters"),
