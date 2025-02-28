@@ -16,9 +16,11 @@ import Link from "next/link";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginUser } from "@/services/authService";
+import { loginUser, rechaptchaTokenVerification } from "@/services/authService";
 import { toast } from "sonner";
 import { loginSchema } from "./loginValidation";
+import ReCAPTCHA from "react-google-recaptcha";
+import { useState } from "react";
 const LoginForm = () => {
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -26,6 +28,20 @@ const LoginForm = () => {
   const {
     formState: { isSubmitting },
   } = form;
+
+  const [rechaptchaStatus, setRechaptchaStatus] = useState(false);
+  const rechaptchaHandler = async (value: string | null) => {
+    console.log(value);
+
+    try {
+      const res = await rechaptchaTokenVerification(value!);
+      if (res.success) {
+        setRechaptchaStatus(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
@@ -86,7 +102,13 @@ const LoginForm = () => {
           />
 
           <div className="w-full flex flex-grow flex-col space-y-1">
+            <ReCAPTCHA
+              className="mx-auto"
+              sitekey={process.env.NEXT_PUBLIC_RECHAPTCHA_CLIENT_KEY as string}
+              onChange={rechaptchaHandler}
+            />
             <Button
+              disabled={rechaptchaStatus ? false : true}
               className="btn bg-rose-400 hover:bg-rose-500  "
               type="submit"
             >

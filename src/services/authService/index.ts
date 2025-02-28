@@ -58,3 +58,21 @@ export const getCurrentUser = async () => {
     return null;
   }
 };
+
+export const rechaptchaTokenVerification = async (token: string) => {
+  try {
+    const res = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        secret: process.env.NEXT_PUBLIC_RECHAPTCHA_SERVER_KEY!,
+        response: token,
+      }),
+    });
+    return res.json();
+  } catch (error: any) {
+    return error;
+  }
+};
