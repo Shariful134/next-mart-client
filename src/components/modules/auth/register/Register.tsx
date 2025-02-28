@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -69,8 +68,7 @@ const RegisterForm = () => {
                     value={field.value || ""}
                   />
                 </FormControl>
-                <FormDescription />
-                <FormMessage />
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
@@ -87,8 +85,8 @@ const RegisterForm = () => {
                     value={field.value || ""}
                   />
                 </FormControl>
-                <FormDescription />
-                <FormMessage />
+
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
@@ -106,8 +104,8 @@ const RegisterForm = () => {
                     value={field.value || ""}
                   />
                 </FormControl>
-                <FormDescription />
-                <FormMessage />
+
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
@@ -125,14 +123,15 @@ const RegisterForm = () => {
                     value={field.value || ""}
                   />
                 </FormControl>
-                <FormDescription />
 
                 {confirmPassword && password !== confirmPassword ? (
-                  <FormMessage>Password dose not match</FormMessage>
+                  <FormMessage className="text-red-500">
+                    Password dose not match
+                  </FormMessage>
                 ) : (
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 )}
-                <FormMessage />
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
