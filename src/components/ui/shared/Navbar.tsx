@@ -53,7 +53,7 @@ export default function Navbar() {
 
           {user ? (
             <>
-              <Link href={"#"}>
+              <Link href={"create-shop"}>
                 <Button
                   variant="outline"
                   className="rounded-full border border-gray-300  hover:bg-gray-200"
