@@ -272,7 +272,7 @@ const CreateShopForm = () => {
                   <FormLabel>Services Offered</FormLabel>
                   <FormControl>
                     <Textarea
-                      className="border border-gray-400 h-[143px]"
+                      className="border border-gray-400 h-36"
                       {...field}
                       value={field.value || ""}
                     />
