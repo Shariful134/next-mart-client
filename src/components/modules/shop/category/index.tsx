@@ -10,6 +10,7 @@ import { Trash } from "lucide-react";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/NMTable/NMModal/DeleteConfirmationModal";
 import { deleteCategory } from "@/services/Category";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type ICategoriesPrps = {
   categories: ICategory[];
@@ -58,7 +59,10 @@ const ManageCategories = ({ categories }: ICategoriesPrps) => {
 
         return (
           <div className="flex items-center space-x-3">
-            <div className="w-7 h-7 rounded-full border-1 border-gray-400"></div>
+            <Avatar>
+              <AvatarImage src={row.original.icon} alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
             <div className="text-right font-medium w-8">
               {row.original.name}
             </div>

@@ -8,9 +8,11 @@ import { Trash } from "lucide-react";
 
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/NMTable/NMModal/DeleteConfirmationModal";
-import { deleteCategory } from "@/services/Category";
 import CreateBrandModal from "./CreateBrandModal";
 import { IBrand } from "@/types/brands";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { deleteBrand } from "@/services/Brand";
 
 export type Payment = {
   id: string;
@@ -24,8 +26,9 @@ const ManageCategoriesBrand = ({ brands }: { brands: IBrand[] }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
+  console.log(selectedId);
+
   const handleDelete = (data: IBrand) => {
-    console.log(data);
     setSelectedId(data?._id);
     setSelectedItem(data?.name);
     setModalOpen(true);
@@ -33,7 +36,7 @@ const ManageCategoriesBrand = ({ brands }: { brands: IBrand[] }) => {
   const handleDeleteConfirm = async () => {
     try {
       if (selectedId) {
-        const res = await deleteCategory(selectedId);
+        const res = await deleteBrand(selectedId);
         console.log("error-res", res);
         if (res.success) {
           toast.success(res.message);
@@ -55,7 +58,10 @@ const ManageCategoriesBrand = ({ brands }: { brands: IBrand[] }) => {
 
         return (
           <div className="flex items-center space-x-3">
-            <div className="w-7 h-7 rounded-full border-1 border-gray-400"></div>
+            <Avatar>
+              <AvatarImage src={row.original.logo} alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
             <div className="text-right font-medium w-8">
               {row.original.name}
             </div>
@@ -67,8 +73,6 @@ const ManageCategoriesBrand = ({ brands }: { brands: IBrand[] }) => {
       accessorKey: "isActive",
       header: () => <div className="text-">IsActive</div>,
       cell: ({ row }) => {
-        console.log(row.original.name);
-
         return (
           <div className="flex items-center space-x-3">
             {row.original.isActive ? (
@@ -85,7 +89,7 @@ const ManageCategoriesBrand = ({ brands }: { brands: IBrand[] }) => {
       },
     },
     {
-      accessorKey: "action",
+      accessorKey: "Action",
       header: () => <div className="text-">Action</div>,
       cell: ({ row }) => {
         return (
