@@ -17,7 +17,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import NMImageUploader from "@/components/ui/core/NMImageUploader";
 
 import { Plus } from "lucide-react";
@@ -25,31 +25,31 @@ import { Plus } from "lucide-react";
 import {
   Select,
   SelectContent,
-  SelectItem,
+  //   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ICategory } from "@/types";
-import { getAllCategories } from "@/services/Category";
-import { getAllBrands } from "@/services/Brand";
-import { addProduct } from "@/services/Product";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { IBrand } from "@/types/brands";
+// import { ICategory } from "@/types";
+// import { getAllCategories } from "@/services/Category";
+// import { getAllBrands } from "@/services/Brand";
+// import { addProduct } from "@/services/Product";
+// import { useRouter } from "next/navigation";
+// import { toast } from "sonner";
+// import { IBrand } from "@/types/brands";
 import ImagePreviewer from "@/components/ui/core/NMImageUploader/ImagePriviewer";
 import Logo from "@/app/assest/svgs/Logo";
 
 export default function AddProductsForm() {
-  //   const [imageFiels, setImageFiels] = useState<File[] | []>([]);
-  //   const [imagePreview, setImagePreview] = useState<string[] | []>([]);
+  // const [imageFiels, setImageFiels] = useState<File[] | []>([]);
+  // const [imagePreview, setImagePreview] = useState<string[] | []>([]);
 
   const [imageFiels, setImageFiels] = useState<File[]>([]);
   const [imagePreview, setImagePreview] = useState<string[]>([]);
 
-  const [categories, setCategories] = useState<ICategory[] | []>([]);
-  const [brands, setBrands] = useState<IBrand[] | []>([]);
+  //   const [categories, setCategories] = useState<ICategory[] | []>([]);
+  //   const [brands, setBrands] = useState<IBrand[] | []>([]);
 
-  const router = useRouter();
+  //   const router = useRouter();
 
   const form = useForm({
     defaultValues: {
@@ -89,85 +89,81 @@ export default function AddProductsForm() {
     appendFeatures({ value: "" });
   };
 
-  //   const { append: appendFeatures, fields: featureFields } = useFieldArray({
-  //     control: form.control,
-  //     name: "keyFeatures",
-  //   });
+  const { append: appendSpec, fields: specFields } = useFieldArray({
+    control: form.control,
+    name: "specification",
+  });
 
-  // const addFeatures = () => {
-  //   appendFeatures({ value: "" });
-  // };
+  const addSpec = () => {
+    appendSpec({ key: "", value: "" });
+  };
 
-  //   const { append: appendSpec, fields: specFields } = useFieldArray({
-  //     control: form.control,
-  //     name: "specification",
-  //   });
+  //   useEffect(() => {
+  //     const fetchData = async () => {
+  //       const [categoriesData, brandsData] = await Promise.all([
+  //         getAllCategories(),
+  //         getAllBrands(),
+  //       ]);
 
-  //   const addSpec = () => {
-  //     appendSpec({ key: "", value: "" });
-  //   };
+  //       setCategories(categoriesData?.data);
+  //       setBrands(brandsData?.data);
+  //     };
 
-  //   console.log(specFields);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const [categoriesData, brandsData] = await Promise.all([
-        getAllCategories(),
-        getAllBrands(),
-      ]);
-
-      setCategories(categoriesData?.data);
-      setBrands(brandsData?.data);
-    };
-
-    fetchData();
-  }, []);
+  //     fetchData();
+  //   }, []);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const availableColors = data.availableColors.map(
+    console.log(data);
+    const availableColors = data?.availableColors.map(
       (color: { value: string }) => color.value
     );
-
-    const keyFeatures = data.keyFeatures.map(
-      (feature: { value: string }) => feature.value
+    const keyFeatures = data?.keyFeatures.map(
+      (keyFeature: { value: string }) => keyFeature.value
     );
 
     const specification: { [key: string]: string } = {};
-    data.specification.forEach(
+    data?.specification.forEach(
       (item: { key: string; value: string }) =>
         (specification[item.key] = item.value)
     );
+    console.log({ availableColors, keyFeatures, specification });
 
-    // console.log({ availableColors, keyFeatures, specification });
+    // const specification: { [key: string]: string } = {};
+    // data.specification.forEach(
+    //   (item: { key: string; value: string }) =>
+    //     (specification[item.key] = item.value)
+    // );
 
-    const modifiedData = {
-      ...data,
-      availableColors,
-      keyFeatures,
-      specification,
-      price: parseFloat(data.price),
-      stock: parseInt(data.stock),
-      weight: parseFloat(data.stock),
-    };
+    // // console.log({ availableColors, keyFeatures, specification });
 
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(modifiedData));
+    // const modifiedData = {
+    //   ...data,
+    //   availableColors,
+    //   keyFeatures,
+    //   specification,
+    //   price: parseFloat(data.price),
+    //   stock: parseInt(data.stock),
+    //   weight: parseFloat(data.stock),
+    // };
 
-    for (const file of imageFiels) {
-      formData.append("images", file);
-    }
-    try {
-      const res = await addProduct(formData);
+    // const formData = new FormData();
+    // formData.append("data", JSON.stringify(modifiedData));
 
-      if (res.success) {
-        toast.success(res.message);
-        router.push("/user/shop/products");
-      } else {
-        toast.error(res.message);
-      }
-    } catch (err: any) {
-      console.error(err);
-    }
+    // for (const file of imageFiels) {
+    //   formData.append("images", file);
+    // }
+    // try {
+    //   const res = await addProduct(formData);
+
+    //   if (res.success) {
+    //     toast.success(res.message);
+    //     router.push("/user/shop/products");
+    //   } else {
+    //     toast.error(res.message);
+    //   }
+    // } catch (err: any) {
+    //   console.error(err);
+    // }
   };
 
   return (
@@ -227,11 +223,13 @@ export default function AddProductsForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories.map((category) => (
+                      {/* <SelectItem>brand</SelectItem> */}
+
+                      {/* {categories.map((category) => (
                         <SelectItem key={category?._id} value={category?._id}>
                           {category?.name}
                         </SelectItem>
-                      ))}
+                      ))} */}
                     </SelectContent>
                   </Select>
 
@@ -254,13 +252,13 @@ export default function AddProductsForm() {
                         <SelectValue placeholder="Select Product Brand" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    {/* <SelectContent>
                       {brands.map((brand) => (
                         <SelectItem key={brand?._id} value={brand?._id}>
                           {brand?.name}
                         </SelectItem>
                       ))}
-                    </SelectContent>
+                    </SelectContent> */}
                   </Select>
 
                   <FormMessage />
@@ -407,7 +405,7 @@ export default function AddProductsForm() {
             <div className="flex justify-between items-center border-t border-b py-3 my-5">
               <p className="text-primary font-bold text-xl">Specification</p>
               <Button
-                // onClick={addSpec}
+                onClick={addSpec}
                 variant="outline"
                 className="size-10"
                 type="button"
@@ -416,35 +414,7 @@ export default function AddProductsForm() {
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 my-5">
-              <FormField
-                control={form.control}
-                name="specification"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Feature name </FormLabel>
-                    <FormControl>
-                      <Input {...field} value={field.value || ""} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="specification"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Feature Description </FormLabel>
-                    <FormControl>
-                      <Input {...field} value={field.value || ""} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/* {specFields.map((specField, index) => (
+            {specFields.map((specField, index) => (
               <div
                 key={specField.id}
                 className="grid grid-cols-1 gap-4 md:grid-cols-2 my-5"
@@ -454,7 +424,7 @@ export default function AddProductsForm() {
                   name={`specification.${index}.key`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Feature name {index + 1}</FormLabel>
+                      <FormLabel>Feature name {index + 1} </FormLabel>
                       <FormControl>
                         <Input {...field} value={field.value || ""} />
                       </FormControl>
@@ -476,10 +446,14 @@ export default function AddProductsForm() {
                   )}
                 />
               </div>
-            ))} */}
+            ))}
           </div>
 
-          <Button type="submit" className="mt-5 w-full" disabled={isSubmitting}>
+          <Button
+            type="submit"
+            className="mt-5 w-full bg-rose-400 hover:bg-rose-500"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Adding Product....." : "Add Product"}
           </Button>
         </form>
